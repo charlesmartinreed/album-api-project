@@ -4,3 +4,5 @@
 
 ### How to use
 
+- `/api/albums` - returns the full album object, including artist, track list, genre, etc.
+- `/api/albums/?limit={limit_value}` - returns the requested number of albums from a pool of album objects, randomized.
