@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+const fs = require("fs");
+const path = require("path");
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -119,10 +122,13 @@ const albums = [
   },
 ];
 
-// DEFAULT ROUTE, return all albums
-// app.get("/api", (req, res) => {
-//   res.status(200).json(albums);
-// });
+// ROUTE - landing/endpoint description page
+app.get("/", (req, res) => {
+  let options = {
+    root: path.join(__dirname),
+  };
+  res.type("html").sendFile("index.html", options, null);
+});
 
 // ROUTE - return specified number of albums
 app.get("/api/albums", (req, res) => {
