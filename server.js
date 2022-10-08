@@ -1,10 +1,20 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
-const PORT = process.env.PORT || 4000;
 
-const fs = require("fs");
+const cors = require("cors");
+
+const PORT = process.env.PORT || 5000;
 const path = require("path");
+
+app.options("*", cors());
+
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -123,6 +133,22 @@ const albums = [
   },
 ];
 
+// MIDDLEWARE
+
+/* DEFAULT CONFIG
+{
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
+*/
+
+// 404 catch-all
+// app.use((req, res) => {
+//   res.send({ error: "Invalid endpoint, please try again." });
+// });
+
 // ROUTE - landing/endpoint description page
 app.get("/", (req, res) => {
   let options = {
@@ -136,24 +162,12 @@ app.get("/api/albums", (req, res) => {
   const { limit } = req.query;
 
   if (!limit) {
-    res.status(200).json(albums);
+    res.json(albums);
   } else {
     let returnedAlbums = returnPartialAlbumList(limit);
-    res.status(200).json(returnedAlbums);
+    res.json(returnedAlbums);
   }
 });
-
-// 404 catch-all
-app.use((req, res) => {
-  res.status(404).send({ error: "Invalid endpoint, please try again." });
-});
-
-app.use(
-  cors({
-    methods: ["GET"],
-    origin: "*",
-  })
-);
 
 function returnPartialAlbumList(limit) {
   if (limit === albums.length || limit > albums.length) return albums;
