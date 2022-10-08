@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
+const { v4: uuidv4 } = require("uuid");
 
 const PORT = process.env.PORT || 5000;
 const path = require("path");
@@ -21,6 +22,7 @@ app.use(express.json());
 
 const albums = [
   {
+    id: uuidv4(),
     name: "hold the girl",
     artist: "rina sawayama",
     genre: "indie rock",
@@ -44,13 +46,14 @@ const albums = [
       { title: "to be alive", length: "3:54", isFavorited: false },
     ],
     albumLength: "46 minutes, 4 seconds",
-    releaseDate: Date("September 16, 2022"),
+    releaseDate: new Date("September 16, 2022"),
     recordLabel: "Dirty Hit",
     imageURL:
       "https://i.discogs.com/-gbgGKkabh9ewsvH7mtqYxva_lxum8upMLfV0OWFplk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njcz/MTYwLTE2NjQ2MDQw/NjUtNTQ3OS5qcGVn.jpeg",
     isFavorited: false,
   },
   {
+    id: uuidv4(),
     name: "radiate like this",
     artist: "warpaint",
     genre: "dream pop",
@@ -67,13 +70,14 @@ const albums = [
       { title: "send nudes", length: "3:19", isFavorited: false },
     ],
     albumLength: "41 minutes, 35 seconds",
-    releaseDate: Date("May 6, 2022"),
+    releaseDate: new Date("May 6, 2022"),
     recordLabel: "Heirlooms",
     imageURL:
       "https://i.discogs.com/nDIk8qtoJqYOLKwa4gHOQR90GGlpkSf6FGTx_rYygus/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzMTI3/MjQ4LTE2NTE3OTgy/NjMtMTc2Mi5qcGVn.jpeg",
     isFavorited: false,
   },
   {
+    id: uuidv4(),
     name: "grit.",
     artist: "luke vibert",
     genre: "breakbeat",
@@ -92,13 +96,14 @@ const albums = [
       { title: "screwfix typeface", length: "7:04", isFavorited: false },
     ],
     albumLength: "1 hour, 7 minutes",
-    releaseDate: Date("July 1, 2022"),
+    releaseDate: new Date("July 1, 2022"),
     recordLabel: "Hypercolor",
     imageURL:
       "https://i.discogs.com/9rLCK1mJ4pO5wVlEH_PwXh2d53QO8ZOiwGC3BE_vws4/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzY3/NTQ0LTE2NTY4MzQw/MDYtMzQ5MS5qcGVn.jpeg",
     isFavorited: false,
   },
   {
+    id: uuidv4(),
     name: "the girls are back in town",
     artist: "chapel hart",
     genre: "country",
@@ -125,7 +130,7 @@ const albums = [
       },
     ],
     albumLength: "42 minutes, 48 seconds",
-    releaseDate: Date("August 28, 2021"),
+    releaseDate: new Date("August 28, 2021"),
     recordLabel: "Chapel Hart",
     imageURL:
       "https://i.discogs.com/3o47buIn1y6356shFpdhE5vJQgwBjwdS6xzGn_j61HI/rs:fit/g:sm/q:90/h:450/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0MTkz/NTI2LTE2NjA0MzMx/MjItNjgzMC5qcGVn.jpeg",
@@ -164,31 +169,34 @@ app.get("/api/albums", (req, res) => {
   if (!limit) {
     res.json(albums);
   } else {
-    let returnedAlbums = returnPartialAlbumList(limit);
+    let returnedAlbums = returnPartialAlbumList(Number(limit));
     res.json(returnedAlbums);
   }
 });
 
 function returnPartialAlbumList(limit) {
-  if (limit === albums.length || limit > albums.length) return albums;
+  if (limit === albums.length || limit > albums.length || limit <= 0)
+    return albums;
 
   let returnedAlbums = [];
+
   let idx = Math.round(Math.random() * limit);
   let albumToAdd = albums[idx];
 
-  while (checkForDuplicates(returnedAlbums, albumToAdd) === false) {
-    addAlbumToReturnedAlbumsList(returnedAlbums, albumToAdd);
-
-    idx = Math.floor(Math.random() * limit);
-    albumToAdd = albums[idx];
-
-    if (returnedAlbums.length === limit) {
-      break;
+  while (returnedAlbums.length < limit) {
+    if (checkForDuplicates(returnedAlbums, albumToAdd) === false) {
+      addAlbumToReturnedAlbumsList(returnedAlbums, albumToAdd);
     }
+
+    idx = Math.round(Math.random() * limit);
+    albumToAdd = albums[idx];
   }
 
   function checkForDuplicates(existingAlbums, albumToAdd) {
-    return existingAlbums.includes(albumToAdd);
+    if (existingAlbums.length === 0) return false;
+
+    let existingIDs = existingAlbums.map((albumObj) => albumObj.id);
+    return existingIDs.includes(albumToAdd.id);
   }
 
   function addAlbumToReturnedAlbumsList(albumCollection, albumToAdd) {
