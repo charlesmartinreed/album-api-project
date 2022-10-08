@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const PORT = process.env.PORT || 4000;
 
 const fs = require("fs");
@@ -146,6 +147,13 @@ app.get("/api/albums", (req, res) => {
 app.use((req, res) => {
   res.status(404).send({ error: "Invalid endpoint, please try again." });
 });
+
+app.use(
+  cors({
+    methods: ["GET"],
+    origin: "*",
+  })
+);
 
 function returnPartialAlbumList(limit) {
   if (limit === albums.length || limit > albums.length) return albums;
