@@ -6,3 +6,4 @@
 
 - `/api/albums` - returns the full album object, including artist, track list, genre, etc.
 - `/api/albums/?limit={limit_value}` - returns the requested number of albums from a pool of album objects, randomized.
+- `/api/album/:albumId` - uses the passed albumID to find and return a specific album from the database.

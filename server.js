@@ -46,7 +46,7 @@ const albums = [
       { title: "to be alive", length: "3:54", isFavorited: false },
     ],
     albumLength: "46 minutes, 4 seconds",
-    releaseDate: new Date("September 16, 2022"),
+    releaseDate: "September 16, 2022",
     recordLabel: "Dirty Hit",
     imageURL:
       "https://i.discogs.com/-gbgGKkabh9ewsvH7mtqYxva_lxum8upMLfV0OWFplk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njcz/MTYwLTE2NjQ2MDQw/NjUtNTQ3OS5qcGVn.jpeg",
@@ -70,7 +70,7 @@ const albums = [
       { title: "send nudes", length: "3:19", isFavorited: false },
     ],
     albumLength: "41 minutes, 35 seconds",
-    releaseDate: new Date("May 6, 2022"),
+    releaseDate: "May 6, 2022",
     recordLabel: "Heirlooms",
     imageURL:
       "https://i.discogs.com/nDIk8qtoJqYOLKwa4gHOQR90GGlpkSf6FGTx_rYygus/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzMTI3/MjQ4LTE2NTE3OTgy/NjMtMTc2Mi5qcGVn.jpeg",
@@ -96,7 +96,7 @@ const albums = [
       { title: "screwfix typeface", length: "7:04", isFavorited: false },
     ],
     albumLength: "1 hour, 7 minutes",
-    releaseDate: new Date("July 1, 2022"),
+    releaseDate: "July 1, 2022",
     recordLabel: "Hypercolor",
     imageURL:
       "https://i.discogs.com/9rLCK1mJ4pO5wVlEH_PwXh2d53QO8ZOiwGC3BE_vws4/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzY3/NTQ0LTE2NTY4MzQw/MDYtMzQ5MS5qcGVn.jpeg",
@@ -130,13 +130,18 @@ const albums = [
       },
     ],
     albumLength: "42 minutes, 48 seconds",
-    releaseDate: new Date("August 28, 2021"),
+    releaseDate: "August 28, 2021",
     recordLabel: "Chapel Hart",
     imageURL:
       "https://i.discogs.com/3o47buIn1y6356shFpdhE5vJQgwBjwdS6xzGn_j61HI/rs:fit/g:sm/q:90/h:450/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0MTkz/NTI2LTE2NjA0MzMx/MjItNjgzMC5qcGVn.jpeg",
     isFavorited: false,
   },
 ];
+
+// TESTING PURPOSES -- FETCH BY ID
+for (const album of albums) {
+  console.log(album.id, album.name);
+}
 
 // MIDDLEWARE
 
@@ -172,6 +177,11 @@ app.get("/api/albums", (req, res) => {
     let returnedAlbums = returnPartialAlbumList(Number(limit));
     res.json(returnedAlbums);
   }
+});
+
+app.get("/api/album/:albumId", (req, res) => {
+  let album = albums.find((album) => album.id === req.params.albumId);
+  res.json(album);
 });
 
 function returnPartialAlbumList(limit) {
