@@ -20,6 +20,12 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const trendingStates = {
+  local: "locally",
+  region: "in your country",
+  global: "worldwide",
+};
+
 const albums = [
   {
     id: uuidv4(),
@@ -50,7 +56,8 @@ const albums = [
     recordLabel: "Dirty Hit",
     imageURL:
       "https://i.discogs.com/-gbgGKkabh9ewsvH7mtqYxva_lxum8upMLfV0OWFplk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njcz/MTYwLTE2NjQ2MDQw/NjUtNTQ3OS5qcGVn.jpeg",
-    isFavorited: false,
+    isFavorited: true,
+    isTrending: { state: true, locale: trendingStates.global },
   },
   {
     id: uuidv4(),
@@ -74,7 +81,8 @@ const albums = [
     recordLabel: "Heirlooms",
     imageURL:
       "https://i.discogs.com/nDIk8qtoJqYOLKwa4gHOQR90GGlpkSf6FGTx_rYygus/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzMTI3/MjQ4LTE2NTE3OTgy/NjMtMTc2Mi5qcGVn.jpeg",
-    isFavorited: false,
+    isFavorited: true,
+    isTrending: { state: false, locale: null },
   },
   {
     id: uuidv4(),
@@ -100,7 +108,8 @@ const albums = [
     recordLabel: "Hypercolor",
     imageURL:
       "https://i.discogs.com/9rLCK1mJ4pO5wVlEH_PwXh2d53QO8ZOiwGC3BE_vws4/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzY3/NTQ0LTE2NTY4MzQw/MDYtMzQ5MS5qcGVn.jpeg",
-    isFavorited: false,
+    isFavorited: true,
+    isTrending: { state: false, locale: null },
   },
   {
     id: uuidv4(),
@@ -135,13 +144,14 @@ const albums = [
     imageURL:
       "https://i.discogs.com/3o47buIn1y6356shFpdhE5vJQgwBjwdS6xzGn_j61HI/rs:fit/g:sm/q:90/h:450/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0MTkz/NTI2LTE2NjA0MzMx/MjItNjgzMC5qcGVn.jpeg",
     isFavorited: false,
+    isTrending: { state: true, locale: trendingStates.region },
   },
 ];
 
 // TESTING PURPOSES -- FETCH BY ID
-for (const album of albums) {
-  console.log(album.id, album.name);
-}
+// for (const album of albums) {
+//   console.log(album.id, album.name);
+// }
 
 // MIDDLEWARE
 
@@ -177,6 +187,14 @@ app.get("/api/albums", (req, res) => {
     let returnedAlbums = returnPartialAlbumList(Number(limit));
     res.json(returnedAlbums);
   }
+});
+
+app.get("/api/albums/trending", (req, res) => {
+  let trendingAlbums = albums.filter(
+    ({ isTrending }) => isTrending.state === true
+  );
+
+  res.json(trendingAlbums);
 });
 
 app.get("/api/album/:albumId", (req, res) => {
