@@ -7,59 +7,86 @@
     <title>A Barebones Music Album API</title>
   </head>
   <body>
-    <section>
-      <header class="main-header">A Barebones Music Album API</header>
-    </section>
+    <div id="page-wrapper">
+      <div id="page-headers">
+        <section>
+          <header class="main-header">A Barebones Music Album API</header>
+        </section>
 
-    <section>
-      <header class="section-header">
-        Just a barebones API used as an backend for a similarly simple web-based
-        music player UI/UX study project,<a
-          class="external-link"
-          href="https://github.com/charlesmartinreed/design-study-side-panel-ux"
-          target="_blank"
-          >which can be found here.</a
+        <section>
+          <header class="section-header">
+            Just a barebones API used as an backend for a similarly simple
+            web-based music player UI/UX study project,<a
+              class="external-link"
+              href="https://github.com/charlesmartinreed/design-study-side-panel-ux"
+              target="_blank"
+              >which can be found here.</a
+            >
+          </header>
+        </section>
+      </div>
+
+      <section id="page-body">
+        <div class="section-outer">
+          <h1>GET route(s)</h1>
+          <p>&#9660;</p>
+        </div>
+        <section class="section-inner">
+          <ul>
+            <li>
+              <code>
+                <span class="route-path">/api/albums</span> returns the full
+                album object, including artist, track list, genre, etc.
+              </code>
+            </li>
+            <li>
+              <code>
+                <span class="route-path">
+                  /api/albums/?limit={limit_value}
+                </span>
+                returns the requested number of albums from a pool of album
+                objects, randomized.
+              </code>
+            </li>
+            <li>
+              <code>
+                <span class="route-path">/api/albums/trending</span> returns
+                albums that are trending, as well as where they are trending
+                (local, region, global).
+              </code>
+            </li>
+            <li>
+              <code>
+                <span class="route-path">/api/album/:albumId</span> returns a
+                specific album from the database, using the URL param for
+                albumID.
+              </code>
+            </li>
+          </ul>
+        </section>
+        <div class="section-outer">
+          <h1>POST routes(s)</h1>
+          <p>&#9660;</p>
+        </div>
+        <section class="section-inner">
+          <ul>
+            <li>
+              <code>
+                <span class="route-path">/api/albums</span> returns the full
+                album object, including artist, track list, genre, etc.
+              </code>
+            </li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="section-attributions">
+        Made by
+        <a class="external-link" href="https://charlesmartinreed.github.io/"
+          >Charles</a
         >
-      </header>
-    </section>
-
-    <section id="page-body">
-      <ul>
-        <li>
-          <code>
-            <span class="route-path">/api/albums</span> returns the full album
-            object, including artist, track list, genre, etc.
-          </code>
-        </li>
-        <li>
-          <code>
-            <span class="route-path"> /api/albums/?limit={limit_value} </span>
-            returns the requested number of albums from a pool of album objects,
-            randomized.
-          </code>
-        </li>
-        <li>
-          <code>
-            <span class="route-path">/api/albums/trending</span> returns albums
-            that are trending, as well as where they are trending (local,
-            region, global).
-          </code>
-        </li>
-        <li>
-          <code>
-            <span class="route-path">/api/album/:albumId</span> returns a
-            specific album from the database, using the URL param for albumID.
-          </code>
-        </li>
-      </ul>
-    </section>
-
-    <section class="section-attributions">
-      Made by
-      <a class="external-link" href="https://charlesmartinreed.github.io/"
-        >Charles</a
-      >
-    </section>
+      </section>
+    </div>
   </body>
   <style>
     * {
@@ -84,17 +111,68 @@
       justify-content: center;
       align-items: center;
       line-height: 1.8rem;
-      width: 100vw;
+      /* width: 900px; */
+      width: 100wv;
       height: 100vh;
+
+      margin: 0 auto;
     }
 
-    section {
-      margin-bottom: 1rem;
-      width: 80%;
+    #page-wrapper {
+      width: 75%;
     }
 
-    section#page-body {
-      min-height: 60vh;
+    #page-headers {
+      min-height: 30vh;
+    }
+
+    .section-outer {
+      height: 50px;
+      background-color: black;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      cursor: pointer;
+    }
+
+    .section-outer h1 {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .section-outer,
+    .section-inner {
+      border-radius: 3px;
+    }
+
+    .section-outer p {
+      opacity: 0.5;
+    }
+
+    .section-outer.unfold p {
+      /* color: rgb(101, 19, 184); */
+      opacity: 1;
+      rotate: 180deg;
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .section-inner.unfold {
+      transform: scaleY(1);
+      height: initial;
+    }
+
+    .section-inner {
+      transform: scaleY(0);
+      transition: 0.2s linear;
+      transform-origin: top center;
+      margin-bottom: 4px;
+      height: 0;
+    }
+
+    #page-body {
+      max-height: 50vh;
     }
 
     .main-header,
@@ -105,13 +183,15 @@
     }
 
     .main-header {
-      font-size: 1.9em;
+      font-size: 2.2em;
       font-weight: 900;
+      line-height: 2.5rem;
     }
 
     .section-header {
-      font-size: 1.2em;
-      font-weight: 500;
+      font-size: 1.1em;
+      font-weight: 400;
+      line-height: 1.5rem;
     }
 
     .external-link {
@@ -134,20 +214,21 @@
     }
 
     li {
-      margin: 0.5em 0;
+      /* margin: 0.5em 0; */
     }
 
     pre,
     code {
       display: block;
       color: goldenrod;
-      background-color: #191c1f;
-      border-radius: 3px;
+      background-color: black;
+      /* border-radius: 3px; */
       padding: 0.5em;
       font-size: 0.8em;
       font-weight: 300;
-      font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+      font-style: italic;
+      /* font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
+        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; */
     }
 
     code .route-path {
@@ -155,12 +236,13 @@
       font-weight: 700;
       font-size: 1.1em;
       color: rgb(101, 19, 184);
+      font-style: normal;
     }
 
     .section-attributions {
-      position: fixed;
+      /* position: fixed;
       bottom: 0;
-      left: 0;
+      left: 0; */
 
       width: 100%;
       height: 100px;
@@ -176,5 +258,25 @@
       font-size: 1rem;
       letter-spacing: 0.5px;
     }
+
+    @keyframes shakeAndGrow {
+      0% {
+        transform: rotate(-20deg) scale(1.2);
+      }
+      100% {
+        transform: rotate(40deg) scale(1.2);
+      }
+    }
   </style>
+  <script>
+    const outers = document.querySelectorAll(".section-outer");
+    outers.forEach((outer) => {
+      outer.addEventListener("click", (e) => {
+        let inner = outer.nextElementSibling;
+
+        outer.classList.toggle("unfold");
+        inner.classList.toggle("unfold");
+      });
+    });
+  </script>
 </html>

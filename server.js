@@ -56,7 +56,7 @@ const albums = [
     recordLabel: "Dirty Hit",
     imageURL:
       "https://i.discogs.com/-gbgGKkabh9ewsvH7mtqYxva_lxum8upMLfV0OWFplk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njcz/MTYwLTE2NjQ2MDQw/NjUtNTQ3OS5qcGVn.jpeg",
-    isFavorited: true,
+    isFavorited: false,
     isTrending: { state: true, locale: trendingStates.global },
   },
   {
@@ -81,7 +81,7 @@ const albums = [
     recordLabel: "Heirlooms",
     imageURL:
       "https://i.discogs.com/nDIk8qtoJqYOLKwa4gHOQR90GGlpkSf6FGTx_rYygus/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzMTI3/MjQ4LTE2NTE3OTgy/NjMtMTc2Mi5qcGVn.jpeg",
-    isFavorited: true,
+    isFavorited: false,
     isTrending: { state: false, locale: null },
   },
   {
@@ -108,7 +108,7 @@ const albums = [
     recordLabel: "Hypercolor",
     imageURL:
       "https://i.discogs.com/9rLCK1mJ4pO5wVlEH_PwXh2d53QO8ZOiwGC3BE_vws4/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzY3/NTQ0LTE2NTY4MzQw/MDYtMzQ5MS5qcGVn.jpeg",
-    isFavorited: true,
+    isFavorited: false,
     isTrending: { state: false, locale: null },
   },
   {
@@ -149,9 +149,9 @@ const albums = [
 ];
 
 // TESTING PURPOSES -- FETCH BY ID
-// for (const album of albums) {
-//   console.log(album.id, album.name);
-// }
+for (const album of albums) {
+  console.log(album.id, album.name);
+}
 
 // MIDDLEWARE
 
@@ -201,6 +201,24 @@ app.get("/api/album/:albumId", (req, res) => {
   let album = albums.find((album) => album.id === req.params.albumId);
   res.json(album);
 });
+
+// ROUTE - POST - update the favorite status of an album
+// params - albumId
+app.post("/api/album/:albumId", (req, res) => {
+  let { prop, value } = req.body;
+  let id = req.params.albumId;
+
+  // TODO: AWAIT THIS UPDATE WHEN THE BACKEND DB IS CONNECTED
+  updateAlbumState(id, prop, value);
+
+  return res.sendStatus(200);
+});
+
+function updateAlbumState(albumId, albumProp, updatedValue) {
+  // an extremely naive implementation :/
+  albums.find((album) => album.id === albumId).albumProp = updatedValue;
+  // album.albumProp = updatedValue;
+}
 
 function returnPartialAlbumList(limit) {
   if (limit === albums.length || limit > albums.length || limit <= 0)
