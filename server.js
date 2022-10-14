@@ -7,6 +7,15 @@ const { v4: uuidv4 } = require("uuid");
 const PORT = process.env.PORT || 5000;
 const path = require("path");
 
+/* DEFAULT CONFIG
+{
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
+*/
+
 app.options("*", cors());
 
 app.use(function (req, res, next) {
@@ -155,23 +164,6 @@ let albums = [
 
 // MIDDLEWARE
 
-/* DEFAULT CONFIG
-{
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204
-}
-*/
-
-// 404 catch-all
-app.use((req, res) => {
-  res.status(400).send({
-    error:
-      "Sorry but that's an invalid endpoint - please check your request and try again. Be sure to check the documentation on the home page to see all of the available endpoints.",
-  });
-});
-
 // ROUTE - landing/endpoint description page
 app.get("/", (req, res) => {
   let options = {
@@ -260,6 +252,13 @@ function returnPartialAlbumList(limit) {
 
   return returnedAlbums;
 }
+
+app.use((req, res, next) => {
+  res.status(400).send({
+    error:
+      "Sorry but that's an invalid endpoint - please check your request and try again. Be sure to check the documentation on the home page to see all of the available endpoints.",
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`server now running on PORT ${PORT}`);
