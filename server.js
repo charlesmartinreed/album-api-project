@@ -11,7 +11,7 @@ app.options("*", cors());
 
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Methods", ["GET", "POST"]);
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", true);
   next();
@@ -26,7 +26,7 @@ const trendingStates = {
   global: "worldwide",
 };
 
-const albums = [
+let albums = [
   {
     id: uuidv4(),
     name: "hold the girl",
@@ -149,9 +149,9 @@ const albums = [
 ];
 
 // TESTING PURPOSES -- FETCH BY ID
-for (const album of albums) {
-  console.log(album.id, album.name);
-}
+// for (const album of albums) {
+//   console.log(album.id, album.name);
+// }
 
 // MIDDLEWARE
 
@@ -165,9 +165,12 @@ for (const album of albums) {
 */
 
 // 404 catch-all
-// app.use((req, res) => {
-//   res.send({ error: "Invalid endpoint, please try again." });
-// });
+app.use((req, res) => {
+  res.status(400).send({
+    error:
+      "Sorry but that's an invalid endpoint - please check your request and try again. Be sure to check the documentation on the home page to see all of the available endpoints.",
+  });
+});
 
 // ROUTE - landing/endpoint description page
 app.get("/", (req, res) => {
@@ -212,6 +215,12 @@ app.post("/api/album/:albumId", (req, res) => {
   updateAlbumState(id, prop, value);
 
   return res.sendStatus(200);
+});
+
+app.delete("*", (req, res) => {
+  return res.status(400).send({
+    error: "Apologies, but that request is not allowed with this API.",
+  });
 });
 
 function updateAlbumState(albumId, albumProp, updatedValue) {
