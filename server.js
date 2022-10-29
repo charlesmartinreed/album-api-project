@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const PORT = process.env.PORT || 5000;
 const path = require("path");
+const { match } = require("assert");
 
 /* DEFAULT CONFIG
 {
@@ -26,6 +27,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+// this is app.use(express.urlencoded({ extended: false }))
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -65,7 +67,7 @@ let albums = [
     recordLabel: "Dirty Hit",
     imageURL:
       "https://i.discogs.com/-gbgGKkabh9ewsvH7mtqYxva_lxum8upMLfV0OWFplk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njcz/MTYwLTE2NjQ2MDQw/NjUtNTQ3OS5qcGVn.jpeg",
-    isFavorited: false,
+    isFavorited: true,
     isTrending: { state: true, locale: trendingStates.global },
   },
   {
@@ -174,13 +176,23 @@ app.get("/", (req, res) => {
 
 // ROUTE - return specified number of albums
 app.get("/api/albums", (req, res) => {
-  const { limit } = req.query;
+  const { limit, search } = req.query;
 
-  if (!limit) {
+  if (!limit && !search) {
     res.json(albums);
-  } else {
+  }
+
+  if (limit) {
     let returnedAlbums = returnPartialAlbumList(Number(limit));
     res.json(returnedAlbums);
+  }
+
+  if (search) {
+    let returnedAlbums = returnMatchedAlbums(search);
+    let returnedSongs = returnMatchedSongs(search);
+
+    let data = [returnedAlbums, returnedSongs];
+    res.json(data);
   }
 });
 
@@ -196,6 +208,8 @@ app.get("/api/album/:albumId", (req, res) => {
   let album = albums.find((album) => album.id === req.params.albumId);
   res.json(album);
 });
+
+app.get("/api/album/");
 
 // ROUTE - POST - update the favorite status of an album
 // params - albumId
@@ -218,7 +232,51 @@ app.delete("*", (req, res) => {
 function updateAlbumState(albumId, albumProp, updatedValue) {
   // an extremely naive implementation :/
   albums.find((album) => album.id === albumId).albumProp = updatedValue;
-  // album.albumProp = updatedValue;
+}
+
+function returnMatchedAlbums(searchQuery) {
+  return albums.filter(
+    (album) => checkForMatch(searchQuery, album.name) === true
+  );
+
+  // return matchedAlbums;
+}
+
+function returnMatchedSongs(searchQuery) {
+  let matchedTracks = [];
+
+  for (const album of albums) {
+    let trackMatches = [];
+
+    for (const track of album.tracks) {
+      if (checkForMatch(searchQuery, track.title) === true) {
+        trackMatches = [track, ...trackMatches];
+      }
+    }
+
+    if (trackMatches.length > 0) {
+      matchedTracks = [
+        ...matchedTracks,
+        { albumId: album.id, matchedTrack: trackMatches },
+      ];
+    }
+  }
+
+  return matchedTracks;
+}
+
+function checkForMatch(searchQuery, testStr) {
+  let testWords = testStr.toLowerCase().split(" ");
+
+  for (const testWord of testWords) {
+    for (let i = 0; i < testWord.length; i += searchQuery.length) {
+      let testSlice = testWord.slice(i, searchQuery.length);
+      if (searchQuery === testSlice) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function returnPartialAlbumList(limit) {

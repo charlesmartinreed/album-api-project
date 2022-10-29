@@ -47,6 +47,15 @@
                 returns the requested number of albums from a pool of album
                 objects, randomized.
               </code>
+              <code>
+                <span class="route-path">
+                  /api/albums/?search={search_value}
+                </span>
+                queries the database for a matching property -- currently
+                <span class="highlighted-phrase">album title</span> or
+                <span class="highlighted-phrase">song title</span> -- and
+                returns the full album object for parsing, as JSON.
+              </code>
             </li>
             <li>
               <code>
@@ -226,7 +235,6 @@
       padding: 0.5em;
       font-size: 0.8em;
       font-weight: 300;
-      font-style: italic;
       /* font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
         DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; */
     }
@@ -252,6 +260,14 @@
 
       font-size: 0.9rem;
       letter-spacing: 1px;
+    }
+
+    .highlighted-phrase {
+      background-color: #111;
+      color: white;
+      padding: 0.5rem;
+      letter-spacing: 0.5px;
+      border-radius: 3px;
     }
 
     .section-attributions .external-link {

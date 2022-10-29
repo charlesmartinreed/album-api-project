@@ -8,6 +8,7 @@
 
 - `/api/albums` - returns the full album object, including artist, track list, genre, etc.
 - `/api/albums/?limit={limit_value}` - returns the requested number of albums from a pool of album objects, randomized.
+- `/api/albums/?search={search_value}` - queries the database for a matching property -- currently `album title` or `song title` -- and returns the full album object for parsing, as JSON.
 - `/api/albums/trending` - returns albums that are trending, as well as where they are trending (local, region, global).
 - `/api/album/:albumId` - returns a specific album from the database, using the URL param for albumID.
 
