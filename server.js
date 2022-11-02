@@ -41,7 +41,11 @@ let albums = [
   {
     id: uuidv4(),
     name: "hold the girl",
-    artist: "rina sawayama",
+    artist: {
+      artistName: "rina sawayama",
+      artistImageURL:
+        "https://i.discogs.com/y6hN4UJ6Pq5id10WnlrSzJEcH7UJG2dMYQkirKOY_N0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTMzNzE0/NzItMTYwODg0MTU4/Mi00MDQwLmpwZWc.jpeg",
+    },
     genre: "indie rock",
     tracks: [
       { title: "minor feelings", length: "2:00", isFavorited: false },
@@ -73,7 +77,11 @@ let albums = [
   {
     id: uuidv4(),
     name: "radiate like this",
-    artist: "warpaint",
+    artist: {
+      artistName: "warpaint",
+      artistImageURL:
+        "https://i.discogs.com/GSGgYScwzrIvJ59JapoNtsHyD6U9PnxspIkERw3sRXQ/rs:fit/g:sm/q:90/h:360/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE0NjA3/NzYtMTY2MTU5Nzg2/Ny0zNjI3LmpwZWc.jpeg",
+    },
     genre: "dream pop",
     tracks: [
       { title: "champion", length: "4:39", isFavorited: false },
@@ -98,7 +106,11 @@ let albums = [
   {
     id: uuidv4(),
     name: "grit.",
-    artist: "luke vibert",
+    artist: {
+      artistName: "luke vibert",
+      artistImageURL:
+        "https://i.discogs.com/Yn5U7ysqpgsgKwrULjLQwYPNEQRIFxE5pQ1zTY0E4mQ/rs:fit/g:sm/q:90/h:399/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI1My0x/NTExMjEzMDY3LTYz/MDMuanBlZw.jpeg",
+    },
     genre: "breakbeat",
     tracks: [
       { title: "surrounded by neighbors", length: "5:31", isFavorited: false },
@@ -125,7 +137,11 @@ let albums = [
   {
     id: uuidv4(),
     name: "the girls are back in town",
-    artist: "chapel hart",
+    artist: {
+      artistName: "chapel hart",
+      artistImageURL:
+        "https://i.discogs.com/Yrj5OTiBXRuPGokM3JDjXqYHkAE-hTKes-pp2z9Cj2Y/rs:fit/g:sm/q:90/h:400/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc5MTk5/NDItMTY1OTM3MzY4/MC0zNzk0LmpwZWc.jpeg",
+    },
     genre: "country",
     tracks: [
       { title: "nearly over you", length: "3:16", isFavorited: false },
@@ -208,8 +224,6 @@ app.get("/api/album/:albumId", (req, res) => {
   let album = albums.find((album) => album.id === req.params.albumId);
   res.json(album);
 });
-
-app.get("/api/album/");
 
 // ROUTE - POST - update the favorite status of an album
 // params - albumId
