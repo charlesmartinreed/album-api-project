@@ -220,6 +220,9 @@ app.get("/api/albums/trending", (req, res) => {
   res.json(trendingAlbums);
 });
 
+
+// song results gets artistImageURL
+// album results get imageURL
 app.get("/api/album/:albumId", (req, res) => {
   let album = albums.find((album) => album.id === req.params.albumId);
   res.json(album);
@@ -271,7 +274,11 @@ function returnMatchedSongs(searchQuery) {
     if (trackMatches.length > 0) {
       matchedTracks = [
         ...matchedTracks,
-        { albumId: album.id, matchedTrack: trackMatches },
+        {
+          albumId: album.id,
+          matchedTrack: trackMatches,
+          artistImageURL: album.artist.artistImageURL,
+        },
       ];
     }
   }
