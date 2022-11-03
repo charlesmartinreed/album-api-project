@@ -220,7 +220,6 @@ app.get("/api/albums/trending", (req, res) => {
   res.json(trendingAlbums);
 });
 
-
 // song results gets artistImageURL
 // album results get imageURL
 app.get("/api/album/:albumId", (req, res) => {
